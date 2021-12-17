@@ -27,6 +27,4 @@ urlpatterns = [
     path("update/<int:pk>/", views.BookUpdate.as_view(), name="update_Book"),
     path("delete/<int:pk>/", views.BookDelete.as_view(), name="delete_Book"),
 
-
-
 ]

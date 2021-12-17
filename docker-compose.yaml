@@ -3,17 +3,28 @@ version: '3'
 services:
   book:
     build:
-      context: ./Project/Project
+      context: ./microLibro/microLibro
     container_name: book
-    command: python Project/manage.py runserver 0.0.0.0:8000
+    command: python microLibro/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     depends_on:
-      - sqlite3
+      - dbBook
+  customer:
+    build:
+      context: ./microCustomer/microCustomer
+    container_name: customer
+    command: python microCustomer/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8001:8000"
+    depends_on:
+      - dbCustomer
 
-  sqlite3:
+  dbBook:
     image: nouchka/sqlite3:latest
     stdin_open: true
     tty: true
@@ -22,6 +33,14 @@ services:
     ports:
       - "3306:3306"
 
+  dbCustomer:
+      image: nouchka/sqlite3:latest
+      stdin_open: true
+      tty: true
+      volumes:
+        - ./db/:/root/db/
+      ports:
+        - "3307:3306"
 
 
 #
