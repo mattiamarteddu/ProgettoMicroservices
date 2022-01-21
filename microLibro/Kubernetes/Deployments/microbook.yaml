@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-deployment
+  labels:
+    app: book
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book
+  template:
+    metadata:
+      labels:
+        app: book
+    spec:
+      containers:
+        - name: microbook
+          image: mattiamarteddu/microbooks:1.0
+          envFrom:
+          - configMapRef:
+              name: book-config
+          ports:
+          - containerPort: 8000
+          imagePullPolicy: Always
+      initContainers:
+      - name: init-myservice
+        image: mattiamarteddu/microbooks:1.0
+        command: ['/bin/sh', '-c', 'python', 'manage.py', 'makemigrations', 'book']
+        command: ['/bin/sh', '-c', 'python', 'manage.py', 'migrate']
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service
+  labels:
+    app: book
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+  selector:
+    app: book
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: book-config
+data:
+  DJANGO_ALLOWED_HOSTS: "*"
+  DJANGO_LOGLEVEL: "info"
+  DEBUG: "True"
+  DATABASE_ENGINE: "django.db.backends.sqlite3"
+  DATABASE_PORT: "3306"
+  POSITION: "ConfigMap"
