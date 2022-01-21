@@ -16,7 +16,7 @@ spec:
         app: borrowing
     spec:
       containers:
-        - name: borrowing-ms
+        - name: microborrowing
           image: mattiamarteddu/microborrowings:1.0
           envFrom:
           - configMapRef:
@@ -40,7 +40,6 @@ spec:
   type: NodePort
   ports:
     - name: http
-      nodePort: 30001
       port: 8000
       targetPort: 8000
   selector:

@@ -16,7 +16,7 @@ spec:
         app: customer
     spec:
       containers:
-        - name: customer-ms
+        - name: microcustomer
           image: mattiamarteddu/microcustomers:1.0
           envFrom:
           - configMapRef:
@@ -40,7 +40,6 @@ spec:
   type: NodePort
   ports:
     - name: http
-      nodePort: 30000
       port: 8000
       targetPort: 8000
   selector:
