@@ -41,6 +41,7 @@ spec:
   ports:
     - name: http
       port: 8000
+      nodeport: 30001
       targetPort: 8000
   selector:
     app: customer
