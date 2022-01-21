@@ -9,6 +9,12 @@ from .serializers import CustomerSerializer
 from django.http import HttpResponse
 
 
+## TEST KAFKA ##
+from kafka import KafkaProducer
+from kafka import KafkaConsumer
+
+
+
 
 
 def index(request):
@@ -21,7 +27,7 @@ class CustomerList(APIView):
         return Response(serializer.data)
 
 class CustomerGet(APIView):
-    def get(self, request, book_id):
+    def get(self, request, customer_id):
         queryset = Customer.objects.filter(id=customer_id)
         serializer = CustomerSerializer(queryset, many=True)
         return Response(serializer.data)

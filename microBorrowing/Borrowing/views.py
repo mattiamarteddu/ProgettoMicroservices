@@ -21,7 +21,7 @@ class BorrowingList(APIView):
         return Response(serializer.data)
 
 class BorrowingGet(APIView):
-    def get(self, request, book_id):
+    def get(self, request, borrowing_id):
         queryset = Borrowing.objects.filter(id=borrowing_id)
         serializer = BorrowingSerializer(queryset, many=True)
         return Response(serializer.data)

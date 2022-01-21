@@ -1,6 +1,25 @@
 ---
+########TEST#############
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-consul-pv0
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  claimRef:
+    namespace: consul
+    name: data-consul-pvc0
+  hostPath:
+    path: "/mnt/data"
+########END/TEST#############
 replicas: 2
-
 # Permit co-located instances for solitary minikube virtual machines.
 antiAffinity: "soft"
 

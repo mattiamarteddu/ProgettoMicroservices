@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-deployment
+  labels:
+    app: customer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer
+  template:
+    metadata:
+      labels:
+        app: customer
+    spec:
+      containers:
+        - name: customer-ms
+          image: mattiamarteddu/microcustomers:1.0
+          envFrom:
+          - configMapRef:
+              name: customer-config
+          ports:
+          - containerPort: 8000
+          imagePullPolicy: Always
+      initContainers:
+      - name: init-myservice
+        image: mattiamarteddu/microcustomers:1.0
+        command: ['/bin/sh', '-c', 'python', 'manage.py', 'makemigrations', 'customer']
+        command: ['/bin/sh', '-c', 'python', 'manage.py', 'migrate']
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+  labels:
+    app: customer
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      nodePort: 30000
+      port: 8000
+      targetPort: 8000
+  selector:
+    app: customer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: customer-config
+data:
+  DJANGO_ALLOWED_HOSTS: "*"
+  DJANGO_LOGLEVEL: "info"
+  DEBUG: "True"
+  DATABASE_ENGINE: "django.db.backends.sqlite3"
+  DATABASE_PORT: "3306"
+  POSITION: "ConfigMap"

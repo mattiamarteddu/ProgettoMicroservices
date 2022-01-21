@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: borrowing-deployment
+  labels:
+    app: borrowing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: borrowing
+  template:
+    metadata:
+      labels:
+        app: borrowing
+    spec:
+      containers:
+        - name: borrowing-ms
+          image: mattiamarteddu/microborrowings:1.0
+          envFrom:
+          - configMapRef:
+              name: borrowing-config
+          ports:
+          - containerPort: 8000
+          imagePullPolicy: Always
+      initContainers:
+      - name: init-myservice
+        image: mattiamarteddu/microborrowings:1.0
+        command: ['/bin/sh', '-c', 'python', 'manage.py', 'makemigrations', 'borrowing']
+        command: ['/bin/sh', '-c', 'python', 'manage.py', 'migrate']
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: borrowing-service
+  labels:
+    app: borrowing
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      nodePort: 30001
+      port: 8000
+      targetPort: 8000
+  selector:
+    app: borrowing
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: borrowing-config
+data:
+  DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_LOGLEVEL: "info"
+    DEBUG: "True"
+    DATABASE_ENGINE: "django.db.backends.postgresql"
+    DATABASE_NAME: "dbBorrowing"
+    USER: 'postgres',
+    PASSWORD: 'postgres',
+    DATABASE_PORT: "5343"
+    POSITION: "ConfigMap"
