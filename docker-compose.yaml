@@ -4,12 +4,13 @@ services:
 
   #Book Microservices#
   book:
-    build:
-      context: ./microLibro/microLibro
+    #build:
+     # context: ./microLibro/microLibro
+    image: mattiamarteddu/microbooks:1.0
     container_name: book
-    command: python microLibro/manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
+    #command: python microLibro/manage.py runserver 0.0.0.0:8000
+    #volumes:
+     # - .:/code
     ports:
       - "8000:8000"
     depends_on:
@@ -29,12 +30,13 @@ services:
 
   #Customer Microservices#
   customer:
-    build:
-      context: ./microCustomer/microCustomer
+    #build:
+      #context: ./microCustomer/microCustomer
+    image: mattiamarteddu/microcustomers:1.0
     container_name: customer
-    command: python microCustomer/manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
+    #command: python microCustomer/manage.py runserver 0.0.0.0:8000
+    #volumes:
+     # - .:/code
     ports:
       - "8001:8000"
     depends_on:
@@ -54,12 +56,13 @@ services:
 
   #Borrowing Microservices#
   borrowing:
-    build:
-      context: ./microBorrowing/microBorrowing
+    #build:
+      #context: ./microBorrowing/microBorrowing
+    image: mattiamarteddu/microborrowings:1.0
     container_name: borrowing
-    command: python microBorrowing/manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
+    #command: python microBorrowing/manage.py runserver 0.0.0.0:8000
+    #volumes:
+     # - .:/code
     ports:
       - "8002:8000"
     depends_on:
